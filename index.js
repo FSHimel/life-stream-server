@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Middleware
+//---------------------------------Middleware----------------------------------------------------
 app.use(cors());
 app.use(express.json());
 
@@ -23,23 +23,30 @@ const client = new MongoClient(uri, {
   },
 });
 
-//getting the routes
+//---------------------------------Getting The Routes----------------------------------------------------
+
 import userRoutes from "./src/Routes/user.route.js";
+
+//--------------------------------------------------------------------------------------------------------
 
 async function run() {
   try {
     await client.connect();
     console.log("connected to mongodb ✅✅");
 
-    //Collection
+    //-------------------------------------All Collections----------------------------------------
+
     const db = client.db("lifeStreamDB");
-    const usersCollection = db.createCollection("users");
+    const usersCollection = db.collection("users");
     app.locals.usersCollection = usersCollection;
+
+    //---------------------------------All APIs----------------------------------------------------
 
     // user related
     app.use("/users", userRoutes);
+
+    //---------------------------------------------------------------------------------------------
   } finally {
-    // Keep connection open
   }
 }
 

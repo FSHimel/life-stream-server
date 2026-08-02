@@ -5,4 +5,21 @@ const getUser = async (req, res) => {
   res.send(result);
 };
 
-export { getUser };
+const postUser = async (req, res) => {
+  const usersCollection = req.app.locals.usersCollection;
+  const userInfo = req.body;
+  userInfo.status = "active";
+  const email = userInfo.email;
+  const userExist = await usersCollection.findOne({ email });
+  if (userExist) {
+    return res.status(409).send({
+      success: false,
+      message: "User already exists",
+    });
+  }
+  userInfo.createdAt = new Date();
+  const result = await usersCollection.insertOne(userInfo);
+  res.send(result);
+};
+
+export { getUser, postUser };
