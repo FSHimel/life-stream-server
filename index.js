@@ -12,6 +12,8 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+
+
 // MongoDB
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@fs.tvevqb6.mongodb.net/?appName=FS`;
 
@@ -41,7 +43,9 @@ async function run() {
     app.locals.usersCollection = usersCollection;
 
     //---------------------------------All APIs----------------------------------------------------
-
+    app.get("/", (req, res) => {
+      res.send("LifeStream is running...");
+    });
     // user related
     app.use("/users", userRoutes);
 

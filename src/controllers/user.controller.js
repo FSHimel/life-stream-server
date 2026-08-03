@@ -5,10 +5,20 @@ const getUser = async (req, res) => {
   res.send(result);
 };
 
+const getOneUser = async (req, res) => {
+  const usersCollection = req.app.locals.usersCollection;
+  const email = req.params.email;
+  if (email !== req.decoded_email) {
+    return res.status(403).send({ message: "forbidded access" });
+  }
+  const query = { email };
+  const result = await usersCollection.findOne(query);
+  res.send(result);
+};
+
 const postUser = async (req, res) => {
   const usersCollection = req.app.locals.usersCollection;
   const userInfo = req.body;
-  userInfo.status = "active";
   const email = userInfo.email;
   const userExist = await usersCollection.findOne({ email });
   if (userExist) {
@@ -22,4 +32,9 @@ const postUser = async (req, res) => {
   res.send(result);
 };
 
-export { getUser, postUser };
+const updateUser = async (req, res) => {
+  const email = req.params.email;
+  const query = { email };
+};
+
+export { getUser, postUser, getOneUser, updateUser };
