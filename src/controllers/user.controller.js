@@ -33,8 +33,23 @@ const postUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+  const usersCollection = req.app.locals.usersCollection;
+  const { displayName, photoURL, district, districtId, upazila, bloodGroup } =
+    req.body;
   const email = req.params.email;
   const query = { email };
+  const updatedUserDoc = {
+    $set: {
+      displayName: displayName,
+      photoURL: photoURL,
+      district: district,
+      districtId: districtId,
+      upazila: upazila,
+      bloodGroup: bloodGroup,
+    },
+  };
+  const result = await usersCollection.updateOne(query, updatedUserDoc);
+  res.send(result);
 };
 
 export { getUser, postUser, getOneUser, updateUser };
