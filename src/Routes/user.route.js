@@ -8,9 +8,9 @@ import {
 } from "../controllers/user.controller.js";
 import verifyFBToken from "../middleware/verifyFBToken.js";
 
-router.get("/", getUser);
+router.get("/", verifyFBToken, getUser);
 router.get("/:email", verifyFBToken, getOneUser);
-router.post("/", postUser);
-router.patch("/:email", updateUser);
+router.post("/", verifyFBToken, postUser);
+router.patch("/:email", verifyFBToken, updateUser);
 
 export default router;

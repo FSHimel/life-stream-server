@@ -2,11 +2,9 @@ const verifyActiveUser = async (req, res, next) => {
   try {
     const usersCollection = req.app.locals.usersCollection;
 
-
     const email = req.decoded_email;
-    const query ={email}
+    const query = { email };
     const user = await usersCollection.findOne(query);
-
 
     // User not found
     if (!user) {
