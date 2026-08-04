@@ -12,8 +12,6 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-
-
 // MongoDB
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@fs.tvevqb6.mongodb.net/?appName=FS`;
 
@@ -28,6 +26,7 @@ const client = new MongoClient(uri, {
 //---------------------------------Getting The Routes----------------------------------------------------
 
 import userRoutes from "./src/Routes/user.route.js";
+import donationRoutes from "./src/Routes/donationReq.route.js";
 
 //--------------------------------------------------------------------------------------------------------
 
@@ -42,12 +41,18 @@ async function run() {
     const usersCollection = db.collection("users");
     app.locals.usersCollection = usersCollection;
 
+    const donationRequestsCollection = db.collection("donationRequests");
+    app.locals.donationRequestsCollection = donationRequestsCollection;
+
     //---------------------------------All APIs----------------------------------------------------
     app.get("/", (req, res) => {
       res.send("LifeStream is running...");
     });
     // user related
     app.use("/users", userRoutes);
+
+    //donation related
+    app.use("/donation-requests", donationRoutes);
 
     //---------------------------------------------------------------------------------------------
   } finally {
