@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 const getDonationReq = async (req, res) => {
   const donationRequestsCollection = req.app.locals.donationRequestsCollection;
   const email = req.params.email;
@@ -23,4 +25,51 @@ const postDonationReq = async (req, res) => {
   res.send(result);
 };
 
-export { getDonationReq, postDonationReq };
+const updateStatusDone = async (req, res) => {
+  const donationRequestsCollection = req.app.locals.donationRequestsCollection;
+  const { statusDone } = req.body;
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const updatedStatusDoc = {
+    $set: {
+      donationStatus: statusDone,
+    },
+  };
+  const result = await donationRequestsCollection.updateOne(
+    query,
+    updatedStatusDoc,
+  );
+  res.send(result);
+};
+const updateStatusCanceled = async (req, res) => {
+  const donationRequestsCollection = req.app.locals.donationRequestsCollection;
+  const { statusCanceled } = req.body;
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const updatedStatusDoc = {
+    $set: {
+      donationStatus: statusCanceled,
+    },
+  };
+  const result = await donationRequestsCollection.updateOne(
+    query,
+    updatedStatusDoc,
+  );
+  res.send(result);
+};
+
+const deletDonationReq = async (req, res) => {
+  const donationRequestsCollection = req.app.locals.donationRequestsCollection;
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await donationRequestsCollection.deleteOne(query);
+  res.send(result);
+};
+
+export {
+  getDonationReq,
+  postDonationReq,
+  updateStatusDone,
+  updateStatusCanceled,
+  deletDonationReq,
+};
