@@ -8,11 +8,18 @@ const getDonationReq = async (req, res) => {
       message: "Forbidden access",
     });
   }
-  const { limit } = req.query;
+  const { limit, status } = req.query;
+
   const query = { requesterEmail: email };
+
   let cursor = donationRequestsCollection.find(query).sort({ createdAt: -1 });
+
   if (limit) {
     cursor = cursor.limit(parseInt(limit));
+  }
+
+  if (status && status !== "all") {
+    query.donationStatus = status;
   }
   const result = await cursor.toArray();
   res.send(result);
