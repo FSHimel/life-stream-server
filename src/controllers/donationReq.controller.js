@@ -25,10 +25,52 @@ const getDonationReq = async (req, res) => {
   res.send(result);
 };
 
+const getOneDonationReq = async (req, res) => {
+  const donationRequestsCollection = req.app.locals.donationRequestsCollection;
+
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+
+  const result = await donationRequestsCollection.findOne(query);
+  res.send(result);
+};
+
 const postDonationReq = async (req, res) => {
   const donationRequestsCollection = req.app.locals.donationRequestsCollection;
   const donationRequest = req.body;
   const result = await donationRequestsCollection.insertOne(donationRequest);
+  res.send(result);
+};
+
+const updateOneRequest = async (req, res) => {
+  const donationRequestsCollection = req.app.locals.donationRequestsCollection;
+  const {
+    recipientName,
+    recipientDistrict,
+    recipientUpazila,
+    hospitalName,
+    fullAddress,
+    bloodGroup,
+    donationDate,
+    donationTime,
+    requestMessage,
+  } = req.body;
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const updatedDoc = {
+    $set: {
+      recipientName: recipientName,
+      recipientDistrict: recipientDistrict,
+      recipientUpazila: recipientUpazila,
+      hospitalName: hospitalName,
+      fullAddress: fullAddress,
+      bloodGroup: bloodGroup,
+      donationDate: donationDate,
+      donationTime: donationTime,
+      requestMessage: requestMessage,
+    },
+  };
+  const result = await donationRequestsCollection.updateOne(query, updatedDoc);
   res.send(result);
 };
 
@@ -79,4 +121,6 @@ export {
   updateStatusDone,
   updateStatusCanceled,
   deletDonationReq,
+  getOneDonationReq,
+  updateOneRequest,
 };
