@@ -1,4 +1,4 @@
-const verifyAdmin = async (req, res, next) => {
+const verifyAdminAndVolunteer = async (req, res, next) => {
   try {
     const usersCollection = req.app.locals.usersCollection;
 
@@ -13,8 +13,8 @@ const verifyAdmin = async (req, res, next) => {
       });
     }
 
-    // if admin or not
-    if (user.role !== "admin") {
+    // if admin or volunteer
+    if (!["admin", "volunteer"].includes(user?.role)) {
       return res.status(403).send({
         message: "You are not allowed to procceed any further",
       });
@@ -29,4 +29,4 @@ const verifyAdmin = async (req, res, next) => {
   }
 };
 
-export default verifyAdmin;
+export default verifyAdminAndVolunteer;

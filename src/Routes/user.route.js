@@ -11,7 +11,7 @@ import {
 import verifyFBToken from "../middleware/verifyFBToken.js";
 import verifyAdmin from "../middleware/verifyActiveUser.js";
 
-router.get("/", verifyFBToken, getUser);
+router.get("/", verifyFBToken, verifyAdmin, getUser);
 router.get("/:email", verifyFBToken, getOneUser);
 router.post("/", verifyFBToken, postUser);
 router.patch("/:email", verifyFBToken, updateUser);

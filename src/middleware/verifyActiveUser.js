@@ -1,4 +1,4 @@
-const verifyAdmin = async (req, res, next) => {
+const verifyActiveUser = async (req, res, next) => {
   try {
     const usersCollection = req.app.locals.usersCollection;
 
@@ -29,4 +29,4 @@ const verifyAdmin = async (req, res, next) => {
   }
 };
 
-export default verifyAdmin;
+export default verifyActiveUser;
