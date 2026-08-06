@@ -1,4 +1,4 @@
-const verifyAdmin = async (req, res, next) => {
+const verifyActiveUser = async (req, res, next) => {
   try {
     const usersCollection = req.app.locals.usersCollection;
 
@@ -13,10 +13,10 @@ const verifyAdmin = async (req, res, next) => {
       });
     }
 
-    // User is blocked
-    if (user.status !== "active") {
+    // if admin or not
+    if (user.role !== "admin") {
       return res.status(403).send({
-        message: "You are blocked from doing this process",
+        message: "You are not allowed to procceed any further",
       });
     }
 
@@ -29,4 +29,4 @@ const verifyAdmin = async (req, res, next) => {
   }
 };
 
-export default verifyAdmin;
+export default verifyActiveUser;

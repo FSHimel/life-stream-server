@@ -1,6 +1,13 @@
 import { ObjectId } from "mongodb";
 
-const getDonationReq = async (req, res) => {
+const getDonationReqs = async (req, res) => {
+  const donationRequestsCollection = req.app.locals.donationRequestsCollection;
+  const cursor = donationRequestsCollection.find();
+  const result = await cursor.toArray();
+  res.send(result);
+};
+
+const getOneDonationReqByEmail = async (req, res) => {
   const donationRequestsCollection = req.app.locals.donationRequestsCollection;
   const email = req.params.email;
   if (email !== req.decoded_email) {
@@ -25,7 +32,7 @@ const getDonationReq = async (req, res) => {
   res.send(result);
 };
 
-const getOneDonationReq = async (req, res) => {
+const getOneDonationReqById = async (req, res) => {
   const donationRequestsCollection = req.app.locals.donationRequestsCollection;
 
   const id = req.params.id;
@@ -116,11 +123,12 @@ const deletDonationReq = async (req, res) => {
 };
 
 export {
-  getDonationReq,
+  getOneDonationReqById,
   postDonationReq,
   updateStatusDone,
   updateStatusCanceled,
   deletDonationReq,
-  getOneDonationReq,
+  getOneDonationReqByEmail,
   updateOneRequest,
+  getDonationReqs,
 };

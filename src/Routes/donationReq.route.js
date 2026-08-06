@@ -1,8 +1,9 @@
 import express from "express";
 import {
   deletDonationReq,
-  getDonationReq,
-  getOneDonationReq,
+  getDonationReqs,
+  getOneDonationReqByEmail,
+  getOneDonationReqById,
   postDonationReq,
   updateOneRequest,
   updateStatusCanceled,
@@ -12,8 +13,9 @@ import verifyFBToken from "../middleware/verifyFBToken.js";
 import verifyActiveUser from "../middleware/verifyActiveUser.js";
 const router = express.Router();
 
-router.get("/:email", verifyFBToken, getDonationReq);
-router.get("/single/:id", verifyFBToken, getOneDonationReq);
+router.get("/", verifyFBToken, getDonationReqs);
+router.get("/:email", verifyFBToken, getOneDonationReqByEmail);
+router.get("/single/:id", verifyFBToken, getOneDonationReqById);
 router.post("/", verifyFBToken, verifyActiveUser, postDonationReq);
 router.patch("/:id", verifyFBToken, verifyActiveUser, updateOneRequest);
 router.patch("/:id/done", verifyFBToken, verifyActiveUser, updateStatusDone);

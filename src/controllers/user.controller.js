@@ -1,6 +1,13 @@
+import { ObjectId } from "mongodb";
+
 const getUser = async (req, res) => {
   const usersCollection = req.app.locals.usersCollection;
-  const cursor = usersCollection.find();
+  const { status } = req.query;
+  const query = {};
+  if (status && status !== "all") {
+    query.status = status;
+  }
+  const cursor = usersCollection.find(query);
   const result = await cursor.toArray();
   res.send(result);
 };
@@ -52,4 +59,59 @@ const updateUser = async (req, res) => {
   res.send(result);
 };
 
-export { getUser, postUser, getOneUser, updateUser };
+const toggleUserStatus = async (req, res) => {
+  const usersCollection = req.app.locals.usersCollection;
+  const { id } = req.params;
+  const query = { _id: new ObjectId(id) };
+
+  const user = await usersCollection.findOne(query);
+
+  if (!user) {
+    return res.status(404).send({
+      message: "User not found",
+    });
+  }
+
+  const newStatus = user.status === "active" ? "blocked" : "active";
+
+  const updatedStatus = {
+    $set: {
+      status: newStatus,
+    },
+  };
+
+  const result = await usersCollection.updateOne(query, updatedStatus);
+
+  res.send(result);
+};
+
+const updateUserRole = async (req, res) => {
+  const usersCollection = req.app.locals.usersCollection;
+  const { id } = req.params;
+  const { role } = req.body;
+
+  if (!["donor", "volunteer", "admin"].includes(role)) {
+    return res.status(400).send({
+      message: "Invalid role",
+    });
+  }
+
+  const query = { _id: new ObjectId(id) };
+  const updatedRole = {
+    $set: {
+      role,
+    },
+  };
+
+  const result = await usersCollection.updateOne(query, updatedRole);
+
+  res.send(result);
+};
+export {
+  getUser,
+  postUser,
+  getOneUser,
+  updateUser,
+  toggleUserStatus,
+  updateUserRole,
+};
