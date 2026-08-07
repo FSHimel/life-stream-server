@@ -12,6 +12,21 @@ const getDonationReqs = async (req, res) => {
   res.send(result);
 };
 
+const getPendingDonationReqs = async (req, res) => {
+  const donationRequestsCollection = req.app.locals.donationRequestsCollection;
+  const { status } = req.query;
+
+  if (!status) {
+    return res.status(404).send({
+      message: "Non data found",
+    });
+  }
+  const query = { donationStatus: status };
+  const cursor = donationRequestsCollection.find(query);
+  const result = await cursor.toArray();
+  res.send(result);
+};
+
 const getDonationReqByEmail = async (req, res) => {
   const donationRequestsCollection = req.app.locals.donationRequestsCollection;
   const email = req.params.email;
@@ -119,6 +134,30 @@ const updateStatusCanceled = async (req, res) => {
   res.send(result);
 };
 
+const updateDonationInProgress = async (req, res) => {
+  const donationRequestsCollection = req.app.locals.donationRequestsCollection;
+
+  const { donorName, donorEmail, donorProfileImg } = req.body;
+
+  const { id } = req.params;
+
+  const result = await donationRequestsCollection.updateOne(
+    {
+      _id: new ObjectId(id),
+    },
+    {
+      $set: {
+        donationStatus: "inProgress",
+        donorName,
+        donorEmail,
+        donorProfileImg,
+      },
+    },
+  );
+
+  res.send(result);
+};
+
 const deletDonationReq = async (req, res) => {
   const donationRequestsCollection = req.app.locals.donationRequestsCollection;
   const id = req.params.id;
@@ -136,4 +175,6 @@ export {
   getDonationReqByEmail,
   updateOneRequest,
   getDonationReqs,
+  getPendingDonationReqs,
+  updateDonationInProgress,
 };

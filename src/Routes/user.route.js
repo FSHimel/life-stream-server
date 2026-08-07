@@ -4,6 +4,7 @@ import {
   getOneUser,
   getUser,
   postUser,
+  searchDonors,
   toggleUserStatus,
   updateUser,
   updateUserRole,
@@ -12,6 +13,7 @@ import verifyFBToken from "../middleware/verifyFBToken.js";
 import verifyAdmin from "../middleware/verifyActiveUser.js";
 
 router.get("/", verifyFBToken, verifyAdmin, getUser);
+router.get("/search", searchDonors);
 router.get("/:email", verifyFBToken, getOneUser);
 router.post("/", verifyFBToken, postUser);
 router.patch("/:email", verifyFBToken, updateUser);

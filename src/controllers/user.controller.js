@@ -23,6 +23,28 @@ const getOneUser = async (req, res) => {
   res.send(result);
 };
 
+const searchDonors = async (req, res) => {
+  const usersCollection = req.app.locals.usersCollection;
+
+  const { bloodGroup, district, upazila } = req.query;
+  console.log("Search Donor:", req.query);
+
+  const query = {
+    status: "active",
+  };
+
+  if (bloodGroup) query.bloodGroup = bloodGroup;
+  if (district) query.district = district;
+  if (upazila) query.upazila = upazila;
+
+  console.log("Query:", query);
+
+  const result = await usersCollection.find(query).toArray();
+  console.log("result:", result);
+
+  res.send(result);
+};
+
 const postUser = async (req, res) => {
   const usersCollection = req.app.locals.usersCollection;
   const userInfo = req.body;
@@ -114,4 +136,5 @@ export {
   updateUser,
   toggleUserStatus,
   updateUserRole,
+  searchDonors,
 };
