@@ -58,4 +58,4 @@ async function run() {
   }
 }
 
-export default app;
+module.exports = app;
