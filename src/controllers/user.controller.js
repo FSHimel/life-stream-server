@@ -27,7 +27,6 @@ const searchDonors = async (req, res) => {
   const usersCollection = req.app.locals.usersCollection;
 
   const { bloodGroup, district, upazila } = req.query;
-  console.log("Search Donor:", req.query);
 
   const query = {
     status: "active",
@@ -37,11 +36,9 @@ const searchDonors = async (req, res) => {
   if (district) query.district = district;
   if (upazila) query.upazila = upazila;
 
-  console.log("Query:", query);
 
   const result = await usersCollection.find(query).toArray();
-  console.log("result:", result);
-
+  
   res.send(result);
 };
 

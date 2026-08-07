@@ -1,9 +1,8 @@
+import "./src/loadEnv.js";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-import { MongoClient, ServerApiVersion } from "mongodb";
 
-dotenv.config();
+import { MongoClient, ServerApiVersion } from "mongodb";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -33,7 +32,7 @@ import donationRoutes from "./src/Routes/donationReq.route.js";
 async function run() {
   try {
     await client.connect();
-    console.log("connected to mongodb ✅✅");
+    // console.log("connected to mongodb ✅✅");
 
     //-------------------------------------All Collections----------------------------------------
 
