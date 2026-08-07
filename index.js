@@ -1,13 +1,14 @@
 import "./src/loadEnv.js";
 import express from "express";
 import cors from "cors";
-
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-const app = express();
-const port = process.env.PORT || 5000;
+import userRoutes from "./src/Routes/user.route.js";
+import donationRoutes from "./src/Routes/donationReq.route.js";
 
-//---------------------------------Middleware----------------------------------------------------
+const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -22,40 +23,45 @@ const client = new MongoClient(uri, {
   },
 });
 
-//---------------------------------Getting The Routes----------------------------------------------------
+let isConnected = false;
 
-import userRoutes from "./src/Routes/user.route.js";
-import donationRoutes from "./src/Routes/donationReq.route.js";
+async function connectDB() {
+  if (isConnected) return;
 
-//--------------------------------------------------------------------------------------------------------
+  await client.connect();
 
-async function run() {
-  try {
-    await client.connect();
-    // console.log("connected to mongodb ✅✅");
+  console.log("MongoDB connected ✅");
 
-    //-------------------------------------All Collections----------------------------------------
+  const db = client.db("lifeStreamDB");
 
-    const db = client.db("lifeStreamDB");
-    const usersCollection = db.collection("users");
-    app.locals.usersCollection = usersCollection;
+  app.locals.usersCollection = db.collection("users");
 
-    const donationRequestsCollection = db.collection("donationRequests");
-    app.locals.donationRequestsCollection = donationRequestsCollection;
+  app.locals.donationRequestsCollection = db.collection("donationRequests");
 
-    //---------------------------------All APIs----------------------------------------------------
-    app.get("/", (req, res) => {
-      res.send("LifeStream is running...");
-    });
-    // user related
-    app.use("/users", userRoutes);
-
-    //donation related
-    app.use("/donation-requests", donationRoutes);
-
-    //---------------------------------------------------------------------------------------------
-  } finally {
-  }
+  isConnected = true;
 }
+
+// Make sure DB is connected before handling requests
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+
+    res.status(500).send({
+      message: "Database connection failed",
+    });
+  }
+});
+
+// Root route
+app.get("/", (req, res) => {
+  res.send("LifeStream is running...");
+});
+
+// Routes
+app.use("/users", userRoutes);
+app.use("/donation-requests", donationRoutes);
 
 export default app;
