@@ -2,7 +2,7 @@ import express from "express";
 import {
   deletDonationReq,
   getDonationReqs,
-  getOneDonationReqByEmail,
+  getDonationReqByEmail,
   getOneDonationReqById,
   postDonationReq,
   updateOneRequest,
@@ -15,7 +15,7 @@ import verifyAdminAndVolunteer from "../middleware/verifyAdminAndVolunteer.js";
 const router = express.Router();
 
 router.get("/", verifyFBToken, verifyAdminAndVolunteer, getDonationReqs);
-router.get("/:email", verifyFBToken, getOneDonationReqByEmail);
+router.get("/:email", verifyFBToken, getDonationReqByEmail);
 router.get("/single/:id", verifyFBToken, getOneDonationReqById);
 router.post("/", verifyFBToken, verifyActiveUser, postDonationReq);
 router.patch("/:id", verifyFBToken, verifyActiveUser, updateOneRequest);

@@ -2,12 +2,17 @@ import { ObjectId } from "mongodb";
 
 const getDonationReqs = async (req, res) => {
   const donationRequestsCollection = req.app.locals.donationRequestsCollection;
-  const cursor = donationRequestsCollection.find();
+  const { status } = req.query;
+  const query = {};
+  let cursor = donationRequestsCollection.find(query);
+  if (status && status !== "all") {
+    query.donationStatus = status;
+  }
   const result = await cursor.toArray();
   res.send(result);
 };
 
-const getOneDonationReqByEmail = async (req, res) => {
+const getDonationReqByEmail = async (req, res) => {
   const donationRequestsCollection = req.app.locals.donationRequestsCollection;
   const email = req.params.email;
   if (email !== req.decoded_email) {
@@ -128,7 +133,7 @@ export {
   updateStatusDone,
   updateStatusCanceled,
   deletDonationReq,
-  getOneDonationReqByEmail,
+  getDonationReqByEmail,
   updateOneRequest,
   getDonationReqs,
 };
