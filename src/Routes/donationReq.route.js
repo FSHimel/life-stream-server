@@ -18,8 +18,8 @@ const router = express.Router();
 
 router.get("/", verifyFBToken, verifyAdminAndVolunteer, getDonationReqs);
 router.get("/pending", getPendingDonationReqs);
-router.get("/:email", verifyFBToken, getDonationReqByEmail);
 router.get("/single/:id", verifyFBToken, getOneDonationReqById);
+router.get("/:email", verifyFBToken, getDonationReqByEmail);
 router.post("/", verifyFBToken, verifyActiveUser, postDonationReq);
 router.patch("/:id", verifyFBToken, verifyActiveUser, updateOneRequest);
 router.patch("/:id/done", verifyFBToken, verifyActiveUser, updateStatusDone);
