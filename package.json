@@ -7,11 +7,15 @@
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
+  "overrides": {
+    "jose": "^4.15.5"
+  },
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "firebase-admin": "^14.2.0",
+    "jwks-rsa": "^4.1.0",
     "mongodb": "^7.5.0"
   }
 }
