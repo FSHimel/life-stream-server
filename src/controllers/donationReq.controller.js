@@ -20,14 +20,8 @@ const getDonationReqs = async (req, res) => {
 
 const getPendingDonationReqs = async (req, res) => {
   const donationRequestsCollection = req.app.locals.donationRequestsCollection;
-  const { status } = req.query;
 
-  if (!status) {
-    return res.status(404).send({
-      message: "Non data found",
-    });
-  }
-  const query = { donationStatus: status };
+  const query = { donationStatus: "pending" };
   const cursor = donationRequestsCollection.find(query);
   const result = await cursor.toArray();
   res.send(result);
